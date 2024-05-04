@@ -18,7 +18,27 @@ public class StudentServiceImpl implements IStudentService{ // singleton - bean
     }
 
     @Override
+    public List<Student> findAll(String sort, String by) {
+        return studentDao.findAll(sort,by);
+    }
+
+    @Override
     public boolean add(Student student) {
         return studentDao.add(student);
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        studentDao.deleteById(id);
+    }
+
+    @Override
+    public Student findById(Integer id) {
+        return studentDao.findById(id);
+    }
+
+    @Override
+    public void update(Student student) {
+        studentDao.update(student);
     }
 }

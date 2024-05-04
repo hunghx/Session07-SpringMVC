@@ -23,7 +23,7 @@
     <br>
     <input type="radio" name="sex" value="false"> <span>Nữ</span>
     <br>
-    <input type="submit" name="action" value="ADD">
+    <input type="submit" value="ADD">
 </form>
 </body>
 </html>

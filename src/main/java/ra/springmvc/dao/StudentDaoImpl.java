@@ -38,6 +38,28 @@ public class StudentDaoImpl implements IStudentDao{
     }
 
     @Override
+    public List<Student> findAll(String sort, String by) {
+        List<Student> students = new ArrayList<>();
+        Connection conn = ConnectDB.getConnection();
+        try {
+            CallableStatement callSt = conn.prepareCall("Select * from student order by "+sort+" "+by);
+            ResultSet rs = callSt.executeQuery();
+            while (rs.next()){
+                Student s = new Student();
+                s.setId(rs.getInt("id"));
+                s.setName(rs.getString("name"));
+                s.setAddress(rs.getString("address"));
+                s.setPhone(rs.getString("phone"));
+                s.setSex(rs.getBoolean("sex"));
+                students.add(s);
+            }
+            return students;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public boolean add(Student student) {
         Connection conn = ConnectDB.getConnection();
         try {
@@ -54,4 +76,55 @@ public class StudentDaoImpl implements IStudentDao{
             return false;
         }
     }
+
+    @Override
+    public void deleteById(Integer id) {
+        Connection conn = ConnectDB.getConnection();
+        try {
+            CallableStatement callSt = conn.prepareCall("delete from student where id = ?");
+            callSt.setInt(1,id);
+            callSt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public Student findById(Integer id) {
+        Connection conn = ConnectDB.getConnection();
+        try {
+            CallableStatement callSt = conn.prepareCall("Select * from student where id = ?");
+            callSt.setInt(1,id);
+            ResultSet rs = callSt.executeQuery();
+            if(rs.next()){
+                Student s = new Student();
+                s.setId(rs.getInt("id"));
+                s.setName(rs.getString("name"));
+                s.setAddress(rs.getString("address"));
+                s.setPhone(rs.getString("phone"));
+                s.setSex(rs.getBoolean("sex"));
+                return s;
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void update(Student student) {
+        Connection conn = ConnectDB.getConnection();
+        try {
+            CallableStatement callSt = conn.prepareCall("update Student set name=?,address=?,phone=?,sex=? where  id =?");
+            callSt.setString(1,student.getName());
+            callSt.setString(2,student.getAddress());
+            callSt.setString(3,student.getPhone());
+            callSt.setBoolean(4,student.getSex());
+            callSt.setInt(5,student.getId());
+            callSt.executeUpdate();
+        } catch (SQLException e) {
+           throw new RuntimeException(e);
+        }
+    }
+
 }
